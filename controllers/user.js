@@ -56,7 +56,7 @@ const login = (req, res, next) => {
 
               return res.json({
                 message: "Success",
-                token: "Bearer " +token,
+                token: "Bearer " + token,
               });
             }
           );
@@ -81,7 +81,7 @@ const verifyJWT = async (req, res, next) => {
       req.user = {};
       req.user.id = decoded.id;
       req.user.username = decoded.username;
-  
+
       next();
     });
   } else {

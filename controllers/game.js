@@ -24,88 +24,65 @@ const create = async (req, res, next) => {
   res.json({ message: "game successfully created!", body: req.body });
 };
 
-const loadOne = (req, res, next) => {
-  // const userLoggingIn = req.body;
+const save = async (req, res, next) => {
+  const game = req.body;
+  const takenTitle = await Game.updateOne(
+    { title: game.title },
+    {
+      $set: {
+        title: game.title,
+        username: game.username,
+        environmentData: game.environmentData,
+        spawnData: game.spawnData,
+        imageOverlay: game.imageOverlay,
+      },
+    }
+  );
 
-  // User.findOne({ username: userLoggingIn.username }).then((dbUser) => {
-  //   if (!dbUser) {
-  //     return res.json({
-  //       message: "Invalid username or password",
-  //     });
-  //   }
-  //   bcrypt
-  //     .compare(userLoggingIn.password, dbUser.password)
-  //     .then((isCorrect) => {
-  //       if (isCorrect) {
-  //         const payload = {
-  //           id: dbUser._id,
-  //           username: dbUser.username,
-  //         };
-  //         jwt.sign(
-  //           payload,
-  //           process.env.JWT_SECRET,
-  //           { expiresIn: 86400 },
-  //           (err, token) => {
-  //             console.log(err);
-  //             if (err) return res.json({ message: err });
+  // if (takenTitle) {
+  //   res.json({ message: "title taken" });
+  //   return null;
+  // }
 
-  //             return res.json({
-  //               message: "Success",
-  //               token: "Bearer " + token,
-  //             });
-  //           }
-  //         );
-  //       } else {
-  //         return res.json({
-  //           message: "Invalid Username or Password",
-  //         });
-  //       }
-  //     });
+  // const dbGame = new Game({
+  //   title: game.title,
+  //   username: game.username,
+  //   environmentData: game.environmentData,
+  //   spawnData: game.spawnData,
+  //   imageOverlay: game.imageOverlay,
   // });
-  res.json({ message: "this endpoint is not ready yet" });
+
+  res.json({
+    message: "game successfully saved!",
+    body: req.body,
+    takenTitle,
+  });
+};
+
+const loadOne = (req, res, next) => {
+  const id = req.query._id;
+
+  Game.findOne({ id }).then((game) => {
+    if (!game) {
+      return res.json({
+        message: "No games found by that id",
+      });
+    }
+    res.json({ message: `game found!`, game });
+  });
 };
 
 const list = (req, res, next) => {
-  // const userLoggingIn = req.body;
+  const username = req.query.username;
 
-  // User.findOne({ username: userLoggingIn.username }).then((dbUser) => {
-  //   if (!dbUser) {
-  //     return res.json({
-  //       message: "Invalid username or password",
-  //     });
-  //   }
-  //   bcrypt
-  //     .compare(userLoggingIn.password, dbUser.password)
-  //     .then((isCorrect) => {
-  //       if (isCorrect) {
-  //         const payload = {
-  //           id: dbUser._id,
-  //           username: dbUser.username,
-  //         };
-  //         jwt.sign(
-  //           payload,
-  //           process.env.JWT_SECRET,
-  //           { expiresIn: 86400 },
-  //           (err, token) => {
-  //             console.log(err);
-  //             if (err) return res.json({ message: err });
-
-  //             return res.json({
-  //               message: "Success",
-  //               token: "Bearer " + token,
-  //             });
-  //           }
-  //         );
-  //       } else {
-  //         return res.json({
-  //           message: "Invalid Username or Password",
-  //         });
-  //       }
-  //     });
-  // });
-  res.json({ message: "this endpoint is not ready yet" });
-
-  return null;
+  Game.find({ username }).then((games) => {
+    if (!games) {
+      return res.json({
+        message: "No games found",
+      });
+    }
+    res.json({ message: `${games.length} games found!`, games });
+  });
 };
 
-module.exports = { create, loadOne, list };
+module.exports = { create, loadOne, list, save };

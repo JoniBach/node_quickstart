@@ -13,9 +13,10 @@ router.get("/load-one", controller.loadOne, (req, res) => {
   res.json(req);
 });
 router.get("/list", controller.list, (req, res) => {
-  console.log(req);
-  res.json(req.game);
+  res.json(req);
 });
+
+router.put("/save", controller.save);
 
 //5th step
 module.exports = router;

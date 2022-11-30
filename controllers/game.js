@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const Game = require("../models/game");
+const { ObjectId } = require("mongodb");
 
 const create = async (req, res, next) => {
   const game = req.body;
@@ -14,6 +15,7 @@ const create = async (req, res, next) => {
   const dbGame = new Game({
     title: game.title.toLowerCase(),
     username: game.username,
+    cellQuantity: game.cellQuantity,
     environmentData: game.environmentData,
     spawnData: game.spawnData,
     imageOverlay: game.imageOverlay,
@@ -31,6 +33,7 @@ const save = async (req, res, next) => {
     {
       $set: {
         title: game.title,
+        cellQuantity: game.cellQuantity,
         username: game.username,
         environmentData: game.environmentData,
         spawnData: game.spawnData,
@@ -62,7 +65,7 @@ const save = async (req, res, next) => {
 const loadOne = (req, res, next) => {
   const id = req.query._id;
 
-  Game.findOne({ id }).then((game) => {
+  Game.findOne({ _id: ObjectId(id) }).then((game) => {
     if (!game) {
       return res.json({
         message: "No games found by that id",

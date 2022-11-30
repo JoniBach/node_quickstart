@@ -18,6 +18,10 @@ const gameSchema = mongoose.Schema(
       type: Array,
       reuqired: true,
     },
+    cellQuantity: {
+      type: Number,
+      reuqired: true,
+    },
     imageOverlay: {
       data: Buffer,
       contentType: String,

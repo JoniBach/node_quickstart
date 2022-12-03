@@ -1,5 +1,3 @@
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
 const Game = require("../models/game");
 const { ObjectId } = require("mongodb");
 
@@ -12,13 +10,15 @@ const create = async (req, res, next) => {
     return null;
   }
 
+  // const image = Buffer.from(game.imageOverlay, "base64");
+
   const dbGame = new Game({
     title: game.title.toLowerCase(),
     username: game.username,
     cellQuantity: game.cellQuantity,
     environmentData: game.environmentData,
     spawnData: game.spawnData,
-    imageOverlay: game.imageOverlay,
+    // imageOverlay: image,
   });
 
   dbGame.save();
@@ -28,6 +28,7 @@ const create = async (req, res, next) => {
 
 const save = async (req, res, next) => {
   const game = req.body;
+  console.log(game);
   const takenTitle = await Game.updateOne(
     { title: game.title },
     {
@@ -71,6 +72,11 @@ const loadOne = (req, res, next) => {
         message: "No games found by that id",
       });
     }
+
+    // const data = {
+    //   ...game,
+    //   imageOverlay: game.imageOverlay.toString("base64"),
+    // };
     res.json({ message: `game found!`, game });
   });
 };

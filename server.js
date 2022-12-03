@@ -12,8 +12,10 @@ const gameRoutes = require("./routes/game");
 
 app.use(cors());
 
-const urlencodedParser = bodyParser.urlencoded({ extended: false });
-app.use(bodyParser.json(), urlencodedParser);
+const urlencodedParser = bodyParser.urlencoded({
+  extended: false,
+});
+app.use(bodyParser.json({ limit: "20mb" }), urlencodedParser);
 
 require("dotenv").config({ path: "./config.env" });
 const port = process.env.PORT || 5001;

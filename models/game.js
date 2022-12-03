@@ -22,11 +22,10 @@ const gameSchema = mongoose.Schema(
       type: Number,
       reuqired: true,
     },
-    imageOverlay: {
-      data: Buffer,
-      contentType: String,
-      reuqired: false,
-    },
+    // imageOverlay: {
+    //   type: Buffer,
+    //   reuqired: false,
+    // },
   },
   { timestamps: true }
 );
